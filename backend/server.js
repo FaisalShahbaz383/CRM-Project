@@ -7,13 +7,17 @@ import authMiddleware from "./middleware/authMiddleware.js";
 import customerRoutes from "./routes/customerRoutes.js";
 import dashboardRoutes from "./routes/dashboardroutes.js";
 
-
 dotenv.config();
 
 const app = express(); 
 
 // Middlewares
-app.use(cors());
+app.use(cors({
+  origin: "*", // Allows requests from all origins (e.g. Vercel, localhost)
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"]
+}));
+
 app.use(express.json());
 
 app.get("/api/test", authMiddleware, (req, res) => {
@@ -27,6 +31,7 @@ app.get("/api/test", authMiddleware, (req, res) => {
 app.get("/", (req, res) => {
   res.send("CRM Backend is running");
 });
+
 app.use("/api/auth", authRoutes);
 app.use("/api/customers", customerRoutes);
 app.use("/api/dashboard", dashboardRoutes);
